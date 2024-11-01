@@ -9,7 +9,8 @@ function App() {
     <>
 
 
-        <div className={`bg-[#1c1c1c] h-screen`}>
+        <div className={`bg-[#1c1c1c] hsc
+        `}>
             {/*<Login />*/}
             <Header/>
             <TaskDiv />

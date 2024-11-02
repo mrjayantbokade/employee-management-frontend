@@ -1,7 +1,8 @@
 import './App.css'
 import Login from './components/Auth/Login.jsx'
 import Header from "./components/others/Header.jsx";
-import TaskDiv from "./components/TaskList/TaskDiv.jsx";
+import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard.jsx";
+import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
 
 function App() {
 
@@ -9,10 +10,11 @@ function App() {
     <>
 
 
-        <div className={`bg-[#1c1c1c] h-screen`}>
+        <div className={`bg-[#1c1c1c] h-screen overflow-hidden`}>
             {/*<Login />*/}
             <Header/>
-            <TaskDiv />
+            {/*<EmployeeDashboard/>*/}
+            <AdminDashboard/>
         </div>
     </>
   )

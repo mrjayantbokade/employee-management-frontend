@@ -1,11 +1,11 @@
 import  { useState } from "react";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 
 
 
-const Login = () => {
+const Login = ({handleLogin}) => {
 
 
 
@@ -19,10 +19,17 @@ const Login = () => {
 
 
     };
+
     const submitHandler = (e) => {
+        if(!email || !password){
+
+            e.preventDefault()
+
+            return alert("there should be email and password")
+        }
+
         e.preventDefault()
-        console.log(email)
-        console.log(password)
+        handleLogin(email, password)
         setEmail("")
         setPassword("")
     }
@@ -70,7 +77,6 @@ const Login = () => {
                 </form>
             </div>
 
-            {/*<FontAwesomeIcon className="text-white text-md" icon="fa-solid {passwordIcon}"/>*/}
         </div>
     )
 }

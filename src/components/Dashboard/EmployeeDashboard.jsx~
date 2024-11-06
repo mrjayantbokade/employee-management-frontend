@@ -3,6 +3,7 @@ import TaskList from "../TaskList/TaskList.jsx";
 
 const EmployeeDashboard = ({data, localLoggedInUser}) => {
 
+    console.log(data, localLoggedInUser)
     return (
         <>
             <TaskDiv />

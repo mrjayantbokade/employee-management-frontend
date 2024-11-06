@@ -5,10 +5,11 @@ import  { useState } from "react";
 
 
 
-const Login = ({handleLogin}) => {
+const Login = ({handleLogin, duludata}) => {
 
 
-    alert("new page")
+    console.log(duludata, "sdkfljskdfuuudud")
+
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

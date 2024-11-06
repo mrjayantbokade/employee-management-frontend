@@ -1,101 +1,93 @@
-import './App.css'
-import Login from './components/Auth/Login.jsx'
+import './App.css';
+import Login from './components/Auth/Login.jsx';
 import Header from "./components/others/Header.jsx";
 import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard.jsx";
 import AdminDashboard from "./components/Dashboard/AdminDashboard.jsx";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "./context/AuthProvider.jsx";
 
 function App() {
-
-
-    const [user, setUser] = useState(null);
     const data = useContext(AuthContext);
 
+    // localStorage.clear()
+    const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
+    const [localLoggedInUser, setLocalLoggedInUser] = useState(null);
+
+    // Load the user from localStorage on component mount
+    useEffect(() => {
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (loggedInUser) {
+            setLocalLoggedInUser(loggedInUser);
+            const role = (loggedInUser.email.split("@")[0]).replace(/\d+$/, '');
+            setRole(role);
+        }
+    }, []);
 
     const findAndAuthenticateEmployee = (email, password) => {
-
-        // const employeeArray = data.employees.employees
-
-        // this logic is for only the local storage. This is not search efficient in real time and lots of data
-
-
-
-        for (let i=0;  i< data.employees.employees.length; i++) {
-
-            const userEmployee = data.employees.employees[i]
-
+        for (let i = 0; i < data.employees.employees.length; i++) {
+            const userEmployee = data.employees.employees[i];
             if (email === userEmployee.email) {
-                console.log("employee Found")
+                console.log("employee Found");
 
-                const localStoragePassword = userEmployee.password
-                if (password === localStoragePassword) {
-                    setUser("employee")
-                    return true
+                if (password === userEmployee.password) {
+                    setUser("employee");
+                    setRole("employee");
+                    localStorage.setItem("loggedInUser", JSON.stringify(userEmployee));
+                    setLocalLoggedInUser(userEmployee); // Update localLoggedInUser immediately
+                    return true;
                 } else {
-                    alert("invalid password")
-                    return false
-
+                    alert("Invalid password");
+                    return false;
                 }
-
-
             }
-
         }
-
-        alert("Employee not found")
-
+        alert("Employee not found");
     }
-
 
     const handleLogin = async (email, password) => {
-
         const role = (email.split("@")[0]).replace(/\d+$/, '');
-        console.log(role)
+        console.log(role);
 
         if (role === "admin") {
-
             if (email === data.admin.admin.email && password === data.admin.admin.password) {
-                setUser("admin")
-
-            }else {
-                alert("invalid password")
+                const adminUser = data.admin.admin;
+                setUser("admin");
+                setRole("admin");
+                localStorage.setItem("loggedInUser", JSON.stringify(adminUser));
+                setLocalLoggedInUser(adminUser); // Update localLoggedInUser immediately
+            } else {
+                alert("Invalid password");
             }
-
         } else if (role === "employee") {
-
-            findAndAuthenticateEmployee(email, password)
-
+            findAndAuthenticateEmployee(email, password);
         } else {
-            alert("invalid credentials")
-
+            alert("Invalid credentials");
         }
-
     }
 
+    // console.log("HELLO DATA", data)
+    // console.log("HELLO localLoggedInUser", localLoggedInUser)
 
     return (
-        <>
-
-
-            <div className={`bg-[#1c1c1c] h-screen overflow-hidden`}>
-                {!user ? <Login handleLogin={handleLogin}/> : ""}
-
-
-                {user === "admin" ? <div>
-                    <Header/>
-                    <AdminDashboard/>
-                </div> : ''}
-
-
-                {user === "employee" ? <div>
-                    <Header/>
-                    <EmployeeDashboard/>
-                </div> : ''
-                }
-            </div>
-        </>
-    )
+        <div className="bg-[#1c1c1c] h-screen overflow-hidden">
+            {!localLoggedInUser ? (
+                <Login duludata={data} handleLogin={handleLogin} />
+            ) : (
+                role === "admin" ? (
+                    <>
+                        <Header data={data} localLoggedInUser={localLoggedInUser} />
+                        <AdminDashboard data={data} localLoggedInUser={localLoggedInUser} />
+                    </>
+                ) : (
+                    <>
+                        <Header data={data} localLoggedInUser={localLoggedInUser} />
+                        <EmployeeDashboard data={data} localLoggedInUser={localLoggedInUser} />
+                    </>
+                )
+            )}
+        </div>
+    );
 }
 
-export default App
+export default App;

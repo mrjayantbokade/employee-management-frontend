@@ -1,7 +1,13 @@
 
 
-const Header = () => {
+const Header = ({data, localLoggedInUser}) => {
 
+    console.log(localLoggedInUser)
+
+    const handleLogout = () => {
+        localStorage.removeItem("loggedInUser")
+        window.location.reload()
+    }
     return (
        <>
 
@@ -9,10 +15,10 @@ const Header = () => {
                <h3>
                    hello,
                    <h1 className={`font-bold text-3xl`}>
-                       Jayant
+                       {localLoggedInUser.email.split("@")[0]}
                    </h1>
                </h3>
-               <button className={`bg-red-600 h-fit px-2 py-0.5 rounded text-white`}>
+               <button onClick={handleLogout} className={`bg-red-600 h-fit px-2 py-0.5 rounded text-white`}>
                    logout
                </button>
            </div>
